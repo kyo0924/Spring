@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="memo">
+
+	<!-- parameterType을 map으로 설정해서 아래처럼 쿼리문 사용 -->
+	<insert id="insertMemo" parameterType="map">
+		insert into memo values(seq_memono.nextval,#{memo},#{password},default)
+	</insert>
+
+	<select id="selectMemo" resultType="map">
+		select * from memo order by memodate desc
+	</select>
+
+</mapper>

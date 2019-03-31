@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dev">
+	<!-- insert는 resultType이 없다  select에만 씀 -->
+	<insert id="insert" parameterType="dev">
+		insert into dev values(seq_dev_no.nextval, #{devName}, #{devAge}, #{devEmail}, #{devGender}, 
+		<!-- 배열을 받을 땐 foreach로 받아준다. -->
+		<!-- <foreach collection="devlang" item="lang" separator="," open="'" close="'">
+			${devlang}
+		</foreach> -->
+		#{devLang, typeHandler=strArr})
+	</insert>
+	
+	
+	<resultMap type="dev" id="devMap">
+		<result column="devlang" property="devLang"	typeHandler="strArr"/>
+	</resultMap>
+	
+	<!-- resultType과 resultMap의 차이는 ?
+		resultMap은 위에처럼 선언해서 불러와서 쓸 수 있고
+		resultType 
+	 -->
+	<select id="selectList" resultMap="devMap">
+		select * from dev
+	</select>
+	
+	<!-- <resultMap type="Member" id="MemberMap">
+		<result column=""
+	</resultMap> -->
+	
+	<insert id="inserMember" parameterType="map">
+		insert into member values(#{)
+	</insert>
+	
+	
+</mapper>

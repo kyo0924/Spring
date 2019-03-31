@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+
+	<aop:aspectj-autoproxy/>
+	
+<!-- 
+	<bean id="LoggerAspect" class="com.kh.spring.common.aop.LoggerAspect" />
+
+	<aop:config>
+		<aop:aspect id="LoggerAspect" ref="LoggerAspect">
+			memo package밑에 모든 java라는 파일에 들어가있는 모든 메소드!! 뒤에(..)은 매개변수가 몇개가 있든 없든 상관없다!
+			<aop:pointcut expression="execution(* com.kh.spring..Memo*.*(..))" id="pcforAll"/>
+			aop:후 Ctrl Space 눌러보면 advice가 나온다 (after부터 before까지)
+			LoggerAdvice를 언제 실행할거냐! pointcut-ref=""
+			<aop:around method="loggerAdvice" pointcut-ref="pcforAll"/>
+		</aop:aspect>
+	</aop:config> -->
+
+</beans>

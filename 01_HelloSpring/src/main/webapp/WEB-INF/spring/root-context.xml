@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xsi:schemaLocation="http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+
+	<!-- DB를 이용할 수 있는 bean을 등록한다 xml에서 id를 부여한다는것은 다른데서 호출해서 쓸수도있다는 얘기 (의존성 
+		부여? 주입?도 마찬가지) 여기서 id들은 그냥 변수명이라고 생각하면 되 bean을 호출할 수 있는 구분할 수 있는 값이라고 생각해 -->
+
+	<bean id="sqlSessionFactoryBean"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 객체에다가 어떤 값을 넣고 싶을 땐 property로 넣어줄 수 있다. / set으로 값이 들어감 ref는 참조 -> 
+			주소가 들어올수있다 -> 즉, 객체가 들어온다 이럴때 ref를 사용 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- mappers 설정해준것들이 들어간다 classpath에서 *을 써주면 src/main/resource로 간다 여기서 
+			mapper를 찾아서 **두개는 그 어떤 경로가 있던 상관없어 (mapper밑에 있는 모든 폴더) xml을 찾는다 -->
+		<property name="mapperLocations"
+			value="classpath*:mapper/**/*.xml" />
+		<property name="configLocation" value="classpath:mybatis.xml" />
+
+	</bean>
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="realDataSource" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE"/>
+				<property name="sqlPrefix" value="[SQL]"/>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="realDataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:XE" />
+		<property name="username" value="spring" />
+		<property name="password" value="spring" />
+	</bean>
+
+	<!-- 얘를 생성할때는 무조건 생성자에 집어넣어줘야되는게 있어야한다. <constructor-arg index="0" ref="sqlSessionFactoryBean"/> -->
+	<bean id="sqlSessionTemplate"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactoryBean" />
+	</bean>
+	
+	<!-- 트랜젝션(어노테이션방식으로 처리) -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- @annotation으로 할 경우에 사용
+	<tx:annotation-driven transaction-manager="transactionManager"/> -->
+
+
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 어떤 메소드에 걸 거냐! -->
+			<tx:method name="select*" rollback-for="Exception" read-only="true"/>		
+			<tx:method name="insert*" rollback-for="Exception"/>
+			<tx:method name="update*" rollback-for="Exception"/>
+			<tx:method name="delete*" rollback-for="Exception"/>
+			
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:config proxy-target-class="true">
+		<aop:pointcut expression="execution(* com.kh.spring..*ServiceImpl.*(..))" id="serviceMethod"/>
+		<aop:advisor id="trasactionAdvisor" advice-ref="txAdvice" pointcut-ref="serviceMethod"/>
+	</aop:config>
+	
+	
+	<!-- 아래 핸들러에서 사용하기 위해 bean등록 -->
+	<bean id="chatting" class="com.kh.spring.common.socket.SocketHandler" />
+	<!-- Namespaces에서 websocket체크해주고 옴 -->
+	<websocket:handlers>
+		<websocket:mapping handler="chatting" path="/chatting.do"/>
+		<websocket:handshake-interceptors>
+			<bean class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor"/>
+		</websocket:handshake-interceptors>
+	
+	</websocket:handlers>
+	
+	<!-- binary파일을 받는 bean을 등록 -->
+	<bean class="org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean"> 
+		<property name="maxBinaryMessageBufferSize" value="10204000"/>
+	</bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+</beans>
