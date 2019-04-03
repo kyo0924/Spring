@@ -10,7 +10,7 @@
 							<!--d는 날짜 p는 레벨을 의미 debug인지 info인지 L은 링크 sprng메모장 참고-->
 			<param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss}] %-5p %l - %m%n" />
 		</layout> 
-<!-- 		<layout class="org.apache.log4j.HTMLLayout">
+<!-- 	<layout class="org.apache.log4j.HTMLLayout">
 		<layout class="org.apache.log4j.SimpleLayout"> 
 		<layout class="org.apache.log4j.XMLLayout">
 		</layout>-->

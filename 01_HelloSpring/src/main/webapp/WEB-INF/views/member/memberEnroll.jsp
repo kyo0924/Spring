@@ -107,14 +107,14 @@ div#enroll-container input, div#enroll-container select {
 						console.log(decodeURIComponent(data.msg)+" : "+typeof data.msg);
 						console.log(data.su+" : "+typeof data.su);
 						
-						/* if(data.trim()=='true'){
+						 if($('#userId_').val()=='true'){
 							$(".guide.ok").show()
 							$(".guide.error").hide();
 						}
 						else{
 							$(".guide.ok").hide()
 							$(".guide.error").show();
-						} */
+						} 
 					}
 				})
 			});

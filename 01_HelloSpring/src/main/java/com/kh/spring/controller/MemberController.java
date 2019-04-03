@@ -40,15 +40,12 @@ public class MemberController {
 	//slf4j를 사용한것 이친구는 string이라서 logger.debug(""+m); 이런식으로 써줘야함
 //	private Logger logger=LoggerFactory.getLogger(MemberController.class);
 	
-	
 	@Autowired
 	private MemberService service;
-
 
 	//암호화하기
 	@Autowired
 	private BCryptPasswordEncoder bcEncoder;
-
 
 	@RequestMapping("/member/memberEnroll.do")
 	public String memberEnroll() {

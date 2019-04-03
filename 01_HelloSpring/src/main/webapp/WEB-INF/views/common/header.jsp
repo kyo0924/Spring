@@ -17,14 +17,26 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
 	integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
 	crossorigin="anonymous"></script>
+	
+	
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width"/>
+<title>Login Demo - Kakao JavaScript SDK</title>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+
+
+	
 <!-- 사용자작성 css -->
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/style.css" />
 <meta charset="UTF-8">
 <title>메인화면</title>
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+
 </head>
 <body>
+
 	<div id="container">
 		<header>
 			<div id="header-container">
@@ -59,10 +71,6 @@
 						<li class="nav-item">
 							<a class="nav-link" href="${path }/memo/memo.do">메모</a>
 						</li>
-						
-						
-						
-						
 					</ul>
 					<c:if test="${loggedMember==null }">
 						<button class="btn btn-outline-success my-2 my-sm-0" 
@@ -71,6 +79,11 @@
 						<button class="btn btn-outline-success my-2 my-sm-0" 
 							type="button" onclick="location.href='${path}/member/memberEnroll.do'">회원가입</button>
 					</c:if>
+					<!-- 카카오로그인 -->
+							<a id="kakao-login-btn"></a>
+							<a href="http://developers.kakao.com/logout">logout</a>
+					
+					
 					<c:if test="${loggedMember!=null }">
 												<!-- 프라이머리키를 넘겨줘야함 -->
 							<%-- <a href="${path}/member/update.do?userId=${loggedMember.userId}">${loggedMember.userName }</a> --%>
@@ -115,6 +128,25 @@
 		
 		
 		
-		
-		
+<script type='text/javascript'>
+    // 사용할 앱의 JavaScript 키를 설정해 주세요.
+    Kakao.init('3936fbb46415d0ad3589f5b20380fa77');
+    // 카카오 로그인 버튼을 생성합니다.
+    Kakao.Auth.createLoginButton({
+      container: '#kakao-login-btn',
+      success: function(authObj){
+         Kakao.API.request({
+            url: '/v1/user/me',
+            success:function(res){
+               console.log(res);
+             //  console.log(profile);
+               $('#kakaoId').val(res.id);
+               $('#kakaoNick').val(res.properties['memberNickname']);
+               $('#kakaoLoginForm').submit();     
+            }
+         })      
+      },
+      fail:function(err){ alert(JSON.stringify(err));}
+   });
+</script>	
 		

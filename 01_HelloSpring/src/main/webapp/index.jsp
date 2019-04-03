@@ -44,7 +44,6 @@
 		})
 	}
 	
-	
 	function ajaxTest2(){
 		var userId=$("#userId").val().trim();
 		if(userId.length<=0){
@@ -60,13 +59,6 @@
 			}
 		});
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 </script>
 

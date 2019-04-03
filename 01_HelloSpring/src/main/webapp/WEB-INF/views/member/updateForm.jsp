@@ -14,10 +14,7 @@
 	if(hobbys!=null){
 		hobbyList=Arrays.asList(hobbys);
 	}
-
 %>
-
-
 
 
 <jsp:include page="/WEB-INF/views/common/header.jsp">
